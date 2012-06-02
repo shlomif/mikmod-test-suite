@@ -7,6 +7,9 @@ use IO::All;
 use FindBin;
 use List::Util qw(first);
 
+# Seed for the random number.
+local $ENV{'MIKMOD_SRAND_CONSTANT'} = "2400";
+
 my $base = $FindBin::Bin;
 chdir($base);
 
