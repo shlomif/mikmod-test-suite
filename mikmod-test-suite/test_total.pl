@@ -6,6 +6,13 @@ use warnings;
 use IO::All;
 use FindBin;
 use List::Util qw(first);
+use Getopt::Long;
+
+my $start_re;
+
+GetOptions(
+    'start=s' => \$start_re,
+) or die "Wrong options";
 
 # Seed for the random number.
 local $ENV{'MIKMOD_SRAND_CONSTANT'} = "2400";
@@ -62,8 +69,8 @@ if (!defined($line))
 }
 
 my ($driver_id) = $line =~ /$re/;
-    
-foreach my $mod (@module_files)
+
+foreach my $mod (grep { (defined($start_re) ? /$start_re/ : 1) .. 1 } @module_files)
 {
     my $get_mod = sub { $mods_dir->catfile($mod); };
     my $mod_in_dir = $get_mod->();
@@ -94,7 +101,7 @@ foreach my $mod (@module_files)
             {
                 if ($sum_fn->slurp() ne $checksum)
                 {
-                    die "Differening checksums on $mod";
+                    die "Different checksums on $mod";
                 }
             }
         }
